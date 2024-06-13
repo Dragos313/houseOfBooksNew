@@ -1,0 +1,154 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+model Store {
+  id             String    @id @default(uuid())
+  name           String
+  userId         String
+  billboards      Billboard[] @relation("StoreToBillboard")
+  categories      Category[] @relation("StoreToCategory")
+  publishingHouses PublishingHouse[] @relation("StoreToPublishingHouse")
+  writers         Writer[] @relation("StoreToWriter")
+  books           Book[] @relation("StoreToBook")
+  authors         Author[] @relation("StoreToAuthor")
+  editions        Edition[] @relation("StoreToEdition")
+  createdAt        DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Billboard {
+  id          String @id @default(uuid())
+  storeId     String
+  store       Store @relation("StoreToBillboard", fields: [storeId], references: [id])
+  label       String
+  imageUrl    String
+  categories  Category[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([storeId])
+}
+
+model Category {
+  id          String      @id @default(uuid())
+  storeId     String      // Foreign Key to Store
+  store       Store       @relation("StoreToCategory", fields: [storeId], references: [id])
+  billboardId String      // Foreign Key to Billboard
+  billboard   Billboard   @relation(fields: [billboardId], references: [id])
+  editions        Edition[] @relation("CategoryToEdition")
+  name        String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([storeId])
+  @@index([billboardId])
+}
+
+model PublishingHouse {
+  id          String    @id @default(uuid())
+  storeId     String    // Foreign Key to Store
+  store       Store     @relation("StoreToPublishingHouse", fields: [storeId], references: [id])
+  editions    Edition[]
+  name        String    
+  code        String    @unique
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([storeId])
+}
+
+model Language {
+  id          String    @id @default(uuid())
+  name        String    
+  editions    Edition[]
+  code        String    @unique
+}
+
+model Writer {
+  id        String    @id @default(uuid())
+  storeId   String
+  store     Store     @relation("StoreToWriter", fields: [storeId], references: [id])
+  authors   Author[]  @relation("WriterToAuthor")
+  name      String    
+  code      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([storeId])
+}
+
+
+model Book {
+  id        String    @id @default(uuid())
+  storeId   String
+  store     Store     @relation("StoreToBook", fields: [storeId], references: [id])
+  authors   Author[]  @relation("BookToAuthor")
+  editions    Edition[]
+  name      String    
+  code      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([storeId])
+}
+
+
+model Author {
+  id        String    @id @default(uuid())
+  storeId   String
+  store     Store     @relation("StoreToAuthor", fields: [storeId], references: [id])
+  bookId    String
+  book      Book      @relation("BookToAuthor", fields: [bookId], references: [id])
+  writerId  String
+  writer    Writer    @relation("WriterToAuthor", fields: [writerId], references: [id])
+  name      String    
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([storeId])
+  @@index([bookId])
+  @@index([writerId])
+}
+
+model Edition {
+  id          String    @id @default(uuid())
+  storeId     String    // Foreign Key to Store
+  store       Store     @relation("StoreToEdition", fields: [storeId], references: [id])
+  categoryId  String    // Foreign Key to Category
+  category    Category  @relation("CategoryToEdition", fields: [categoryId], references: [id])
+  name        String
+  price       Decimal
+  isFeatured  Boolean   @default(false)
+  isArchived  Boolean   @default(false)
+  bookId           String
+  publishingHouseId String
+  languageId       String
+  book             Book           @relation(fields: [bookId], references: [id])
+  publishingHouse  PublishingHouse @relation(fields: [publishingHouseId], references: [id])
+  language         Language       @relation(fields: [languageId], references: [id])
+  images      Image[]   // Relation to Image model
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([storeId])
+  @@index([categoryId])
+  @@index([bookId])
+  @@index([publishingHouseId])
+  @@index([languageId])
+}
+
+model Image {
+  id          String   @id @default(uuid())
+  editionId   String   // Foreign Key to Product
+  edition     Edition  @relation(fields: [editionId], references: [id], onDelete: Cascade)
+  url         String   // URL of the image
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([editionId])
+}
