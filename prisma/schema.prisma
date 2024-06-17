@@ -17,6 +17,7 @@ model Store {
   books           Book[] @relation("StoreToBook")
   authors         Author[] @relation("StoreToAuthor")
   editions        Edition[] @relation("StoreToEdition")
+  orders          Order[] @relation("StoreToOrder")
   createdAt        DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -132,6 +133,7 @@ model Edition {
   publishingHouse  PublishingHouse @relation(fields: [publishingHouseId], references: [id])
   language         Language       @relation(fields: [languageId], references: [id])
   images      Image[]   // Relation to Image model
+  orderItems  OrderItem[] 
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
@@ -150,5 +152,31 @@ model Image {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  @@index([editionId])
+}
+
+model Order {
+  id        String    @id @default(uuid())
+  storeId     String    // Foreign Key to Store
+  store       Store     @relation("StoreToOrder", fields: [storeId], references: [id])
+  orderItems OrderItem[] // Relation to OrderItem model
+  isPaid     Boolean   @default(false)
+  phone      String    @default("")
+  address    String    @default("")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([storeId])
+}
+
+// Intermediary for a many-to-many relationship
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String  // Foreign Key to Order
+  order     Order   @relation(fields: [orderId], references: [id])
+  editionId String  // Foreign Key to Product
+  edition   Edition @relation(fields: [editionId], references: [id])
+
+  @@index([orderId])
   @@index([editionId])
 }
