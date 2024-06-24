@@ -81,7 +81,7 @@ export async function PATCH(
 
     const body = await req.json();
 
-    const { name, price, categoryId, images, bookId, languageId, publishingHouseId, isFeatured, isArchived } = body;
+    const { name, price, isbn, categoryId, images, bookId, languageId, publishingHouseId, isFeatured, isArchived, isAntiquarian, isAuction } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -145,6 +145,8 @@ export async function PATCH(
         },
         isFeatured,
         isArchived,
+        isAntiquarian,
+        isAuction
       },
     });
 

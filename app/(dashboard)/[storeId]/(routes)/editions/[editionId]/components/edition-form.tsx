@@ -30,6 +30,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 
 const formSchema = z.object({
   name: z.string().min(1),
+  isbn: z.string().min(1),
   images: z.object({ url: z.string() }).array(),
   price: z.coerce.number().min(1),
   categoryId: z.string().min(1),
@@ -37,7 +38,9 @@ const formSchema = z.object({
   bookId: z.string().min(1),
   languageId: z.string().min(1),
   isFeatured: z.boolean().default(false).optional(),
-  isArchived: z.boolean().default(false).optional()
+  isArchived: z.boolean().default(false).optional(),
+  isAntiquarian: z.boolean().default(false).optional(),
+  isAuction: z.boolean().default(false).optional(),
 });
 
 type EditionFormValues = z.infer<typeof formSchema>
@@ -65,7 +68,7 @@ export const EditionForm: React.FC<EditionFormProps> = ({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const title = initialData ? 'Edit edition' : 'Create product';
+  const title = initialData ? 'Edit edition' : 'Create edition';
   const description = initialData ? 'Edit a edition.' : 'Add a new edition';
   const toastMessage = initialData ? 'Edition updated.' : 'Edition created.';
   const action = initialData ? 'Save changes' : 'Create';
@@ -75,6 +78,7 @@ export const EditionForm: React.FC<EditionFormProps> = ({
     price: parseFloat(String(initialData?.price)),
   } : {
     name: '',
+    isbn: '',
     images: [],
     price: 0,
     categoryId: '',
@@ -83,6 +87,8 @@ export const EditionForm: React.FC<EditionFormProps> = ({
     publishingHouseId: '',
     isFeatured: false,
     isArchived: false,
+    isAntiquarian: false,
+    isAuction: false,
   }
 
   const form = useForm<EditionFormValues>({
@@ -174,6 +180,19 @@ export const EditionForm: React.FC<EditionFormProps> = ({
                   <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input disabled={loading} placeholder="Edition name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="isbn"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>ISBN</FormLabel>
+                  <FormControl>
+                    <Input disabled={loading} placeholder="Edition ISBN" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -321,6 +340,52 @@ export const EditionForm: React.FC<EditionFormProps> = ({
                     </FormLabel>
                     <FormDescription>
                       This edition will not appear anywhere in the store.
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="isAntiquarian"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      // @ts-ignore
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>
+                      Antiquarian
+                    </FormLabel>
+                    <FormDescription>
+                      This edition is antiquarian
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="isAuction"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      // @ts-ignore
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>
+                      Auction
+                    </FormLabel>
+                    <FormDescription>
+                      This edition will be on the auction page
                     </FormDescription>
                   </div>
                 </FormItem>

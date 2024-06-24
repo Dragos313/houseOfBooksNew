@@ -15,6 +15,8 @@ export type EditionColumn = {
   createdAt: string;
   isFeatured: boolean;
   isArchived: boolean;
+  isAntiquarian: boolean;
+  isAuction: boolean;
 }
 
 export const columns: ColumnDef<EditionColumn>[] = [
@@ -31,8 +33,20 @@ export const columns: ColumnDef<EditionColumn>[] = [
     header: "Featured",
   },
   {
+    accessorKey: "isAntiquarian",
+    header: "Antiquarian",
+  },
+  {
+    accessorKey: "isAuction",
+    header: "Auction",
+  },
+  {
     accessorKey: "price",
     header: "Price",
+  },
+  {
+    accessorKey: "isbn",
+    header: "ISBN",
   },
   {
     accessorKey: "category",

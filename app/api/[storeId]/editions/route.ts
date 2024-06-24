@@ -12,7 +12,7 @@ export async function POST(
 
     const body = await req.json();
 
-    const { name, price, categoryId, bookId, languageId, publishingHouseId, images, isFeatured, isArchived } = body;
+    const { name, isbn, price, categoryId, bookId, languageId, publishingHouseId, images, isFeatured, isArchived, isAntiquarian, isAuction } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -65,8 +65,11 @@ export async function POST(
       data: {
         name,
         price,
+        isbn,
         isFeatured,
         isArchived,
+        isAntiquarian,
+        isAuction,
         categoryId,
         bookId,
         languageId,
@@ -100,6 +103,8 @@ export async function GET(
     const languageId = searchParams.get('languageId') || undefined;
     const publishingHouseId = searchParams.get('publishingHouseId') || undefined;
     const isFeatured = searchParams.get('isFeatured');
+    const isAntiquarian = searchParams.get('isAntiquarian');
+    const isAuction = searchParams.get('isAuction');
 
     if (!params.storeId) {
       return new NextResponse("Store id is required", { status: 400 });
@@ -113,6 +118,8 @@ export async function GET(
         languageId,
         publishingHouseId,
         isFeatured: isFeatured ? true : undefined,
+        isAntiquarian: isAntiquarian ? true : undefined,
+        isAuction: isAuction ? true : undefined,
         isArchived: false,
       },
       include: {

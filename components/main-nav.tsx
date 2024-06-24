@@ -30,6 +30,11 @@ export function MainNav({
       active: pathname === `/${params.storeId}/categories`,
     },
     {
+      href: `/${params.storeId}/languages`,
+      label: 'Languages',
+      active: pathname === `/${params.storeId}/languages`,
+    },
+    {
       href: `/${params.storeId}/publishingHouses`,
       label: 'Publishers',
       active: pathname === `/${params.storeId}/publishingHouses`,

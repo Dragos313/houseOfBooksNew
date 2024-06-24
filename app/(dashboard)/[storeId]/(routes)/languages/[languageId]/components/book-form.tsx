@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
 import { Trash } from "lucide-react"
-import { Book } from "@prisma/client"
+import { Language } from "@prisma/client"
 import { useParams, useRouter } from "next/navigation"
 
 import { Input } from "@/components/ui/input"
@@ -29,13 +29,13 @@ const formSchema = z.object({
   code: z.string().min(1),
 });
 
-type BookFormValues = z.infer<typeof formSchema>
+type LanguageFormValues = z.infer<typeof formSchema>
 
-interface BookFormProps {
-  initialData: Book | null;
+interface LanguageFormProps {
+  initialData: Language | null;
 };
 
-export const BookForm: React.FC<BookFormProps> = ({
+export const LanguageForm: React.FC<LanguageFormProps> = ({
   initialData
 }) => {
   const params = useParams();
@@ -44,28 +44,28 @@ export const BookForm: React.FC<BookFormProps> = ({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const title = initialData ? 'Edit book' : 'Create book';
-  const description = initialData ? 'Edit a book.' : 'Add a new book';
-  const toastMessage = initialData ? 'Book updated.' : 'Book created.';
+  const title = initialData ? 'Edit language' : 'Create language';
+  const description = initialData ? 'Edit a language.' : 'Add a new language';
+  const toastMessage = initialData ? 'Language updated.' : 'Language created.';
   const action = initialData ? 'Save changes' : 'Create';
 
-  const form = useForm<BookFormValues>({
+  const form = useForm<LanguageFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
       name: ''
     }
   });
 
-  const onSubmit = async (data: BookFormValues) => {
+  const onSubmit = async (data: LanguageFormValues) => {
     try {
       setLoading(true);
       if (initialData) {
-        await axios.patch(`/api/${params.storeId}/books/${params.bookId}`, data);
+        await axios.patch(`/api/${params.storeId}/languages/${params.languageId}`, data);
       } else {
-        await axios.post(`/api/${params.storeId}/books`, data);
+        await axios.post(`/api/${params.storeId}/languages`, data);
       }
       router.refresh();
-      router.push(`/${params.storeId}/books`);
+      router.push(`/${params.storeId}/languages`);
       toast.success(toastMessage);
     } catch (error: any) {
       toast.error('Something went wrong.');
@@ -77,12 +77,12 @@ export const BookForm: React.FC<BookFormProps> = ({
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/books/${params.bookId}`);
+      await axios.delete(`/api/${params.storeId}/languages/${params.languageId}`);
       router.refresh();
-      router.push(`/${params.storeId}/books`);
-      toast.success('Book deleted.');
+      router.push(`/${params.storeId}/languages`);
+      toast.success('Language deleted.');
     } catch (error: any) {
-      toast.error('Make sure you removed all products using this book first.');
+      toast.error('Make sure you removed all products using this language first.');
     } finally {
       setLoading(false);
       setOpen(false);
@@ -121,7 +121,7 @@ export const BookForm: React.FC<BookFormProps> = ({
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input disabled={loading} placeholder="Book name" {...field} />
+                    <Input disabled={loading} placeholder="Language name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -134,7 +134,7 @@ export const BookForm: React.FC<BookFormProps> = ({
                 <FormItem>
                   <FormLabel>Code</FormLabel>
                   <FormControl>
-                    <Input disabled={loading} placeholder="Book code" {...field} />
+                    <Input disabled={loading} placeholder="Language code" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

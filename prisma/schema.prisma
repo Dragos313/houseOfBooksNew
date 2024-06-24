@@ -18,6 +18,7 @@ model Store {
   authors         Author[] @relation("StoreToAuthor")
   editions        Edition[] @relation("StoreToEdition")
   orders          Order[] @relation("StoreToOrder")
+  languages       Language[] @relation("StoreToLanguage")
   createdAt        DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -65,9 +66,13 @@ model PublishingHouse {
 
 model Language {
   id          String    @id @default(uuid())
+  storeId     String
+  store       Store     @relation("StoreToLanguage", fields: [storeId], references: [id])
   name        String    
   editions    Edition[]
   code        String    @unique
+
+  @@index([storeId])
 }
 
 model Writer {
@@ -123,9 +128,12 @@ model Edition {
   categoryId  String    // Foreign Key to Category
   category    Category  @relation("CategoryToEdition", fields: [categoryId], references: [id])
   name        String
+  isbn        String
   price       Decimal
   isFeatured  Boolean   @default(false)
   isArchived  Boolean   @default(false)
+  isAntiquarian Boolean @default(false)
+  isAuction     Boolean @default(false)
   bookId           String
   publishingHouseId String
   languageId       String
