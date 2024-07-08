@@ -69,7 +69,6 @@ export async function POST(
         isFeatured,
         isArchived,
         isAntiquarian,
-        isAuction,
         categoryId,
         bookId,
         languageId,
@@ -119,7 +118,6 @@ export async function GET(
         publishingHouseId,
         isFeatured: isFeatured ? true : undefined,
         isAntiquarian: isAntiquarian ? true : undefined,
-        isAuction: isAuction ? true : undefined,
         isArchived: false,
       },
       include: {

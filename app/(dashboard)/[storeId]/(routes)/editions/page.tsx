@@ -33,7 +33,6 @@ const EditionsPage = async ({
     isFeatured: item.isFeatured,
     isArchived: item.isArchived,
     isAntiquarian: item.isAntiquarian,
-    isAuction: item.isAuction,
     price: formatter.format(item.price.toNumber()),
     category: item.category.name,
     publishingHouse: item.publishingHouse.name,

@@ -359,33 +359,10 @@ export const EditionForm: React.FC<EditionFormProps> = ({
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel>
-                      Antiquarian
+                      Old book
                     </FormLabel>
                     <FormDescription>
-                      This edition is antiquarian
-                    </FormDescription>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="isAuction"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      // @ts-ignore
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel>
-                      Auction
-                    </FormLabel>
-                    <FormDescription>
-                      This edition will be on the auction page
+                      This edition is an old book
                     </FormDescription>
                   </div>
                 </FormItem>

@@ -7,83 +7,83 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 model Store {
-  id             String    @id @default(uuid())
-  name           String
-  userId         String
-  billboards      Billboard[] @relation("StoreToBillboard")
-  categories      Category[] @relation("StoreToCategory")
-  publishingHouses PublishingHouse[] @relation("StoreToPublishingHouse")
-  writers         Writer[] @relation("StoreToWriter")
-  books           Book[] @relation("StoreToBook")
-  authors         Author[] @relation("StoreToAuthor")
-  editions        Edition[] @relation("StoreToEdition")
-  orders          Order[] @relation("StoreToOrder")
-  languages       Language[] @relation("StoreToLanguage")
-  createdAt        DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                  String    @id @default(uuid())
+  name                String
+  userId              String
+  billboards          Billboard[] @relation("StoreToBillboard")
+  categories          Category[] @relation("StoreToCategory")
+  publishingHouses    PublishingHouse[] @relation("StoreToPublishingHouse")
+  writers             Writer[] @relation("StoreToWriter")
+  books               Book[] @relation("StoreToBook")
+  authors             Author[] @relation("StoreToAuthor")
+  editions            Edition[] @relation("StoreToEdition")
+  orders              Order[] @relation("StoreToOrder")
+  languages           Language[] @relation("StoreToLanguage")
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 }
 
 model Billboard {
-  id          String @id @default(uuid())
-  storeId     String
-  store       Store @relation("StoreToBillboard", fields: [storeId], references: [id])
-  label       String
-  imageUrl    String
-  categories  Category[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                  String @id @default(uuid())
+  storeId             String
+  store               Store @relation("StoreToBillboard", fields: [storeId], references: [id])
+  label               String
+  imageUrl            String
+  categories          Category[]
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
   @@index([storeId])
 }
 
 model Category {
-  id          String      @id @default(uuid())
-  storeId     String      // Foreign Key to Store
-  store       Store       @relation("StoreToCategory", fields: [storeId], references: [id])
-  billboardId String      // Foreign Key to Billboard
-  billboard   Billboard   @relation(fields: [billboardId], references: [id])
-  editions        Edition[] @relation("CategoryToEdition")
-  name        String
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id                  String @id @default(uuid())
+  storeId             String      
+  store               Store @relation("StoreToCategory", fields: [storeId], references: [id])
+  billboardId         String      
+  billboard           Billboard @relation(fields: [billboardId], references: [id])
+  editions            Edition[] @relation("CategoryToEdition")
+  name                String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
   @@index([storeId])
   @@index([billboardId])
 }
 
 model PublishingHouse {
-  id          String    @id @default(uuid())
-  storeId     String    // Foreign Key to Store
-  store       Store     @relation("StoreToPublishingHouse", fields: [storeId], references: [id])
-  editions    Edition[]
-  name        String    
-  code        String    @unique
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id                  String @id @default(uuid())
+  storeId             String    
+  store               Store @relation("StoreToPublishingHouse", fields: [storeId], references: [id])
+  editions            Edition[]
+  name                String    
+  code                String @unique
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
   @@index([storeId])
 }
 
 model Language {
-  id          String    @id @default(uuid())
-  storeId     String
-  store       Store     @relation("StoreToLanguage", fields: [storeId], references: [id])
-  name        String    
-  editions    Edition[]
-  code        String    @unique
+  id                  String @id @default(uuid())
+  storeId             String
+  store               Store @relation("StoreToLanguage", fields: [storeId], references: [id])
+  name                String    
+  editions            Edition[]
+  code                String @unique
 
   @@index([storeId])
 }
 
 model Writer {
-  id        String    @id @default(uuid())
-  storeId   String
-  store     Store     @relation("StoreToWriter", fields: [storeId], references: [id])
-  authors   Author[]  @relation("WriterToAuthor")
-  name      String    
-  code      String    @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id                  String @id @default(uuid())
+  storeId             String
+  store               Store @relation("StoreToWriter", fields: [storeId], references: [id])
+  authors             Author[] @relation("WriterToAuthor")
+  name                String    
+  code                String @unique
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
   @@index([storeId])
 }
@@ -133,7 +133,6 @@ model Edition {
   isFeatured  Boolean   @default(false)
   isArchived  Boolean   @default(false)
   isAntiquarian Boolean @default(false)
-  isAuction     Boolean @default(false)
   bookId           String
   publishingHouseId String
   languageId       String
